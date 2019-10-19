@@ -535,10 +535,10 @@ void StartScene::m_updateUI()
 void StartScene::m_move()
 {
 	//Pf = Pi + ViT + 1/2AT^2
-	m_velocity = m_velocity * m_PPM; //muzzel velocty
+	
 	//velocity components
-	m_velocityX = m_velocity * cos(m_angel * Deg2Rad);
-	m_velocityY = m_velocity * sin(m_angel * Deg2Rad);
+	m_velocityX = (m_velocity*m_PPM) * cos(m_angel * Deg2Rad);
+	m_velocityY = (m_velocity*m_PPM) * -sin(m_angel * Deg2Rad);
 	glm::vec2 velocity_vector = glm::vec2(m_velocityX, m_velocityY);
 
 	m_acceleration = glm::vec2(0.0f, m_gravity) * m_PPM;
