@@ -30,6 +30,10 @@ void StartScene::draw()
 
 void StartScene::update()
 {
+	if (m_isGravityEnabled)
+	{
+		m_move();
+	}
 	if (m_displayUI)
 	{
 		m_updateUI();
@@ -292,8 +296,44 @@ void StartScene::m_updateUI()
 	/*************************************************************************************************/
 	if (ImGui::Button("toggle gravity"))
 	{
-		
+		m_isGravityEnabled = (m_isGravityEnabled) ? false : true;
 	}
+
+	ImGui::SameLine();
+	if (ImGui::Button("Reset all"))
+	{
+		m_isGravityEnabled = false;
+		m_pShip->setPosition(glm::vec2(400.0f, 300.0f));
+		m_gravity = 9.8f;
+		m_PPM = 10.0f;
+		m_Atime = 0.016667f;
+		m_angel = 0.0f;
+		m_velocity = 0.0f;
+		m_velocityX = 0.0f;
+		m_velocityY = 0.0f;
+	}
+
+	ImGui::PushItemWidth(80);
+	if (ImGui::SliderFloat("Gravity",&m_gravity, 0.1f, 30.0f, "%.1f"))
+	{
+
+	}
+
+	if (ImGui::SliderFloat("Pixels Per Meter", &m_PPM, 1.0f, 30.0f, "%.1f"))
+	{
+
+	}
+
+	if (ImGui::SliderFloat("Kicking angel", &m_angel, 0.0f, 90.0f, "%.1f"))
+	{
+
+	}
+
+	if (ImGui::SliderFloat("initial velocty", &m_velocity, 0.0f, 200.0f, "%.1f"))
+	{
+
+	}
+
 
 	//ImGui::SameLine();
 
@@ -490,4 +530,23 @@ void StartScene::m_updateUI()
 
 	// Main Window End
 	ImGui::End();
+}
+
+void StartScene::m_move()
+{
+	//Pf = Pi + ViT + 1/2AT^2
+	m_velocity = m_velocity * m_PPM; //muzzel velocty
+	//velocity components
+	m_velocityX = m_velocity * cos(m_angel * Deg2Rad);
+	m_velocityY = m_velocity * sin(m_angel * Deg2Rad);
+	glm::vec2 velocity_vector = glm::vec2(m_velocityX, m_velocityY);
+
+	m_acceleration = glm::vec2(0.0f, m_gravity) * m_PPM;
+	
+	//physics equation
+	m_finalPosition = m_pShip->getPosition() + 
+		(velocity_vector * m_time) +
+		((m_acceleration * 0.5f)* (m_Atime * m_Atime));
+	m_Atime += m_time;
+	m_pShip->setPosition(m_finalPosition);
 }

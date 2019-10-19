@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "Label.h"
 #include "ship.h"
+#include <cmath>
 
 class StartScene : public Scene
 {
@@ -36,6 +37,27 @@ private:
 	bool m_exitApp = false;
 	bool m_displayAbout = false;
 	bool m_displayUI = true;
+
+	// Physics Variables
+	const float Deg2Rad = 0.0174532925f;
+	const float Rad2Deg = 57.2975795130f;
+	bool m_isGravityEnabled = false;
+	float m_gravity = 9.8f;
+	float m_PPM = 10.0f; // pixels per meter - scale
+
+	glm::vec2 m_finalPosition = glm::vec2(0.0f, 0.0f);
+	float m_velocity = 0.0f;
+	float m_velocityX = 0.0f;
+	float m_velocityY = 0.0f;
+	glm::vec2 m_acceleration = glm::vec2(0.0f, 0.0f);
+	float m_time = 0.016667f; //16ms
+	float m_Atime = 0.016667f; //accumilated time
+
+	float m_angel = 0.0f;
+
+	//Physics function
+	void m_move(); 
+
 };
 
 #endif /* defined (__START_SCENE__) */
